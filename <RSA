@@ -1,0 +1,131 @@
+import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+
+
+public class RSA {
+
+	public static int createPQ(int n , List<Integer> primeNumbers ) {
+		int currentNum = primeNumbers.get(primeNumbers.size()-1);
+		for (int i=0; i<primeNumbers.size()-1;i++) {
+			if(primeNumbers.get(i)*currentNum>n){
+				return primeNumbers.get(i);
+			}
+		}
+		return 0;
+	}
+
+	public static HashMap<BigInteger,BigInteger> primeNumbersBruteForce(int n) {
+		HashMap<BigInteger,BigInteger> ans = new HashMap<BigInteger,BigInteger>();
+		List<Integer> primeNumbers = new LinkedList<>();
+		int counter = 0;
+		int p=0;
+		int q=0;
+		boolean find2NUmbers = false;
+		while(find2NUmbers == false) {
+			Random random = new Random();
+			//random.setSeed(123456789);
+
+			int num = random.nextInt(n);
+			if (isPrimeBruteForce(num)) {
+				primeNumbers.add(num);
+				if(primeNumbers.size()>1) {
+					counter++;
+					if(createPQ(n ,primeNumbers )>0) {
+						p =createPQ(n ,primeNumbers );
+						q = num;
+						find2NUmbers=true;
+					}
+				}
+			}
+		}
+
+		BigInteger p1 = BigInteger.valueOf(p);
+		BigInteger q1 = BigInteger.valueOf(q);
+		BigInteger p2 = BigInteger.valueOf(1);
+
+		ans.put(p1, q1);
+		System.out.println("p = " + p1);
+		System.out.println("q = " + q1);
+		System.out.println( "n = " + p1.multiply(q1));
+		System.out.println( "PN= " + (p1.subtract(p2)).multiply((q1.subtract(p2))) );
+		return ans;
+	}
+
+	private static boolean isPrimeBruteForce(int number) {
+		for (int i = 2; i < number; i++) {
+			if (number % i == 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public static HashMap<BigInteger,BigInteger> generate_p_q_different_primes(String plain_message){
+		BigInteger plain_text_bigint = SringToBigInteger(plain_message);
+		HashMap<BigInteger,BigInteger> ans = primeNumbersBruteForce(plain_text_bigint.intValue());		
+		return ans;
+	}
+
+	public static byte[] encrypt(String plain_message, BigInteger public_key, BigInteger n) {
+		BigInteger plain_text_bigint = SringToBigInteger(plain_message);
+		System.out.println("plain_text_bigint = " + plain_text_bigint);
+		// byte[]  encrypt = new byte[] ;
+		BigInteger cipher_text =plain_text_bigint.modPow(public_key, n);
+		//System.out.println(cipher_text);
+		byte []  cipher_text_byte= cipher_text.toByteArray();
+		return cipher_text_byte;
+	}
+
+	public static String decrypt(byte[] encrypted_message,BigInteger private_key,BigInteger n) {
+		BigInteger encrypted_text_bigint = new BigInteger(encrypted_message);
+		System.out.println(encrypted_text_bigint);
+		BigInteger plain_text_bigint =encrypted_text_bigint.modPow(private_key, n);
+		String plain_text = new String (plain_text_bigint.toByteArray());
+		return plain_text;
+	}
+
+	public static BigInteger SringToBigInteger (String str) {
+		BigInteger BigInt = new BigInteger(str.getBytes());
+
+		if (BigInt.compareTo(BigInteger.ZERO)<0) {
+			BigInt = BigInt.multiply(BigInteger.valueOf(-1));
+		}
+		return BigInt;	
+	}
+
+	public static void main(String[] args) {
+
+		generate_p_q_different_primes("ab");
+		BigInteger public_key = BigInteger.valueOf(7);
+		BigInteger private_key = BigInteger.valueOf(5008543);
+		//System.out.println("public_key = " +public_key);
+		//System.out.println("private_key = " +private_key);
+		String a5 = "ab" ;
+		BigInteger n = BigInteger.valueOf(35072291);
+		//System.out.println("n = " + n);
+
+		byte []  cipher_text_byte=encrypt("ab",public_key,n);
+		for (int i = 0 ; i<cipher_text_byte.length; i++) {
+			//System.out.print(cipher_text_byte[i]);
+		}
+
+		//p = 4261);
+		// q = 8231);
+		//(n =35072291);
+		//pn = 35059800);
+		//e = 7);
+		//d = 5008543
+		
+		//plain_text_bigint = 526287943380050304265573
+		
+
+
+		String a = decrypt(cipher_text_byte,private_key,n); 
+		System.out.println(a);
+
+	}
+
+}
