@@ -1,0 +1,87 @@
+import java.io.*;
+import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
+
+public class RunTimeComparison {
+
+	public static void main(String[] args) throws IOException {
+
+		double time [][] = new double [9][5];
+		String names [] = {"1","10","20","50","100"};
+		String init_vector = "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";
+		String key = "kTsDXRVgHIzJNxLGFrdWuKqZQeMAfCPJtEBUhbavlytwoOncmiYS";
+		BigInteger public_key = BigInteger.valueOf(7);
+		BigInteger n = BigInteger.valueOf(35072291);
+		BigInteger private_key = BigInteger.valueOf(5008543);
+		
+		
+		//Each time run on other algorithm
+		for (int i=0 ; i <names.length; i++ ) {
+			File CipherText_Key2  = new File ("src/"+names[i]+"MB.txt");
+			String text = Files.readString(Paths.get(CipherText_Key2.getAbsolutePath()));
+			
+			//String text = Files.readString(Paths.get("C:\\Users\\oraza\\Desktop\\"+names[i]+"MB.txt"));
+			
+			//Cipher Block Chaining Time check
+			long encryptTimeStart =  System.currentTimeMillis();
+			String encrypt=CipherBlockChaining.encrypt(text, init_vector , key);
+			long encryptTimeEND = System.currentTimeMillis()-encryptTimeStart;
+			float encryptTimeSec = encryptTimeEND/1000F;
+			time[0][i]=encryptTimeSec;
+			long descryptTimeStart =  System.currentTimeMillis();
+			String decrypt= CipherBlockChaining.decrypt(encrypt, init_vector , key);
+			long descryptTimeEND = System.currentTimeMillis()-descryptTimeStart;
+			float descryptTimeSec = descryptTimeEND/1000F;
+			time[1][i]=descryptTimeSec;
+			long bothTimeEND = System.currentTimeMillis()-encryptTimeStart;
+			float bothTimeSec = bothTimeEND/1000F;
+			time[2][i]= bothTimeSec;
+			System.out.println("Cipher Block Chaining "+ names[i] + "MB :");
+			System.out.println("encryptTime = " + time[0][i] + ", descryptTimeSec = " + time[1][i] + ", both = "+ time[2][i] );
+			
+			//RSA Time check
+			long encryptRSATimeStart =  System.currentTimeMillis();
+			byte[] RSAencrpt = RSA.encrypt(text, public_key, n);
+			long encryptRSATimeEND = System.currentTimeMillis()-encryptRSATimeStart;
+			time[3][i]=encryptRSATimeEND/1000F;
+			long descryptRSATimeStart =  System.currentTimeMillis();
+			String RSA_plain_text = RSA.decrypt(RSAencrpt, private_key, n);
+			long descryptRSATimeEND = System.currentTimeMillis()-descryptRSATimeStart;
+			time[4][i]=descryptRSATimeEND/1000F;
+			long bothTimeRSAEND = System.currentTimeMillis()-encryptRSATimeStart;
+			time[5][i]= bothTimeRSAEND/1000F;
+			System.out.println("RSA "+names[i] + "MB : ");
+			System.out.println("encryptTime = " + time[3][i] + ", descryptTimeSec = " + time[4][i] + ", both = "+ time[5][i] );
+			
+			
+			//Digital Envelope Time check
+			long encryptDeTimeStart =  System.currentTimeMillis();
+			HashMap<byte[],String> env = DigitalEnvelope.create_envelope("tyueawtmtq", text, "dhagcfbe", public_key, n );
+			long encryptDeTimeEND = System.currentTimeMillis()-encryptDeTimeStart;
+			time[6][i]=encryptDeTimeEND/1000F;
+			long descryptDeTimeStart =  System.currentTimeMillis();
+			String openEV = DigitalEnvelope.open_envelope(env, "tyueawtmtq", private_key, n);
+			long descryptDeTimeEND = System.currentTimeMillis()-descryptDeTimeStart;
+			time[7][i]=descryptDeTimeEND/1000F;
+			long bothTimeDeEND = System.currentTimeMillis()-encryptDeTimeStart;
+			time[8][i]= bothTimeDeEND/1000F;
+			System.out.println("Digital Envelope "+names[i] + "MB : ");
+			System.out.println("encryptTime = " + time[6][i] + ", descryptTimeSec = " + time[7][i] + ", both = "+ time[8][i] );
+			
+			
+		}
+		
+		for (int i=0 ; i<time.length; i++ ) {
+			for (int j=0 ; j<time[0].length; j++ ) {
+				System.out.print("["+ time[i][j] +"]");
+			}
+			System.out.println();
+		}
+
+	}
+
+
+
+}
